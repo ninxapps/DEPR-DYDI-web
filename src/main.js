@@ -8,6 +8,7 @@ import $ from 'jquery'
 import Auth from 'j-toker'
 
 import 'script!jquery'
+import 'script!jquery-appear-poetic/jquery.appear.js'
 // import 'script!foundation-sites'
 
 import App from './components/App.vue'

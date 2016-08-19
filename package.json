@@ -57,6 +57,7 @@
     "foundation-sites": "^6.2.3",
     "j-toker": "0.0.10-beta3",
     "jquery": "^3.1.0",
+    "jquery-appear-poetic": "^0.3.9",
     "script-loader": "^0.7.0",
     "vue": "^1.0.11",
     "vue-resource": "^0.6.0",

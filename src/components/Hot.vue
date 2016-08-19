@@ -1,5 +1,9 @@
 <script>
 	import Question from './Question.vue';
+
+	import 'jquery-appear-poetic'
+
+
 	export default {
 		name: "Hot",
 		components: {
@@ -8,18 +12,35 @@
 		data: function(){
 			return {
 				questions: [],
-				nextPage: ''
+				nextPage: '',
+				loadingQuestions: false
 			}
 		},
 		methods: {
 		 	loadMoreQuestions: function (event) {
 		 		var self = this;
-		    $(function() {
-		      $.getJSON(self.nextPage).done(function(resp) {
-						self.questions = self.questions.concat(resp.data);
-						self.nextPage = resp.links.next;
-					});
-		    });
+		 		if (!self.loadingQuestions) {
+			 		self.loadingQuestions = true;
+			    $(function() {
+				 		$('.load-more').text('Loading...');
+			      $.getJSON(self.nextPage).done(function(resp) {
+							self.questions = self.questions.concat(resp.data);
+							self.nextPage = resp.links.next;
+							
+					 		$('.load-more').text('More pls');
+					 		self.loadingQuestions = false;
+						});
+			    });
+		 		}
+			},
+			onSroll: function (event, position) {
+				var self = this;
+		 		if (!self.loadingQuestions && $('.questions-container').height() + position.top >= $('.load-more').position().top) {
+		 			self.loadMoreQuestions
+		 		}
+		 		else {
+		 			console.log($('.questions-container').height() + position.top, $('-load-more').position().top)
+		 		}
 			}
 		},
 		ready () {
@@ -29,6 +50,12 @@
 					self.questions = resp.data;
 					self.nextPage = resp.links.next;
 				});
+
+				$(document).on('scroll', function(event) {
+			    if (!self.loadingQuestions && $('.load-more').is(':appeared')) {
+			    	self.loadMoreQuestions()
+			    }
+			  });
 	    });
 	  }
 	}
@@ -39,7 +66,7 @@
 		<div class="large-6 large-offset-3 medium-12 columns questions-container">
 			<question v-for="q in questions" :question="q"></question>
 			<div class="load-more question-wrapper" v-if="nextPage" v-on:click="loadMoreQuestions">More pls</div>
-			<div class="load-more question-wrapper" v-else>No more for you :c</div>
+			<div class="question-wrapper" v-else>No more for you :c</div>
 		</div>
 	</div>
 </template>
